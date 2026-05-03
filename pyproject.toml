@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "professor-copilot-database"
+version = "0.1.0"
+description = "Alembic migration project for Professor Copilot EdTech platform"
+requires-python = ">=3.11"
+
+dependencies = [
+    "alembic>=1.14.0",
+    "sqlalchemy>=2.0.0",
+    "psycopg2-binary>=2.9.9",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-postgresql>=6.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["migrations*", "scripts*"]
+
+# ── Alembic CLI shorthand ──────────────────────────────────────
+[project.scripts]
+db-migrate  = "scripts.db_init:main"
+db-reset    = "scripts.db_reset:main"
