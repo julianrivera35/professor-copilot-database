@@ -87,20 +87,19 @@ def run_migrations_online() -> None:
     connectable = create_engine(
         database_url,
         poolclass=pool.NullPool,
+        # search_path vía connect_args para no interferir con las transacciones de Alembic
+        connect_args={
+            "options": "-c search_path=auth,billing,core,pedagogy,ops,public"
+        },
     )
 
     with connectable.connect() as connection:
-        # Asegurarse de que el search_path incluye los schemas necesarios
-        connection.execute(
-            text("SET search_path TO auth, billing, core, pedagogy, ops, public")
-        )
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
             include_schemas=True,
             include_name=include_name,
             compare_type=True,
-            # Tabla de versiones en schema público para simplicidad
             version_table="alembic_version",
             version_table_schema="public",
         )
